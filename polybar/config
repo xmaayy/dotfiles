@@ -31,40 +31,57 @@ primary = #cCc0b0
 secondary = #FD2C40
 alert = #BD2C40
 
-[bar/example]
+[bar/top]
 monitor = ${env:MONITOR:}
-
 width = 110%
 height = 30
 radius = 0.0
 fixed-center = false
-
 background = ${colors.background}
 foreground = ${colors.foreground}
-
 line-size = 3
 line-color = #f00
-
 border-size = 0
 border-color = #00000000
-
 padding-left = 0
 padding-right = 2
-
 module-margin-left = 1
 module-margin-right = 1
-
 font-0 = fixed:pixelsize=10;1
 font-1 = unifont:fontformat=truetype:size=10:antialias=false;0
 font-2 = siji:pixelsize=10;1
-
-modules-left = i3
-modules-center = pulseaudio 
-modules-right = filesystem memory cpu wlan battery date
-
+modules-left = pulseaudio spotify 
+modules-right = filesystem memory cpu battery
 tray-position = right
 tray-padding = 2
+cursor-click = pointer
+cursor-scroll = ns-resize
 
+
+[bar/bottom]
+bottom = true
+monitor = ${env:MONITOR:}
+width = 110%
+height = 30
+radius = 0.0
+fixed-center = false
+background = ${colors.background}
+foreground = ${colors.foreground}
+line-size = 3
+line-color = #f00
+border-size = 0
+border-color = #00000000
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 1
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=10:antialias=false;0
+font-2 = siji:pixelsize=10;1
+modules-left = i3
+modules-right = wlan date
+tray-position = right
+tray-padding = 2
 cursor-click = pointer
 cursor-scroll = ns-resize
 
@@ -132,7 +149,7 @@ label-urgent-padding = 2
 
 ; Separator in between workspaces
 ; label-separator = |
-ws-icon-0 = 1;⌬
+ws-icon-0 = 1|⌬
 
 
 [module/xbacklight]
@@ -157,13 +174,13 @@ card = intel_backlight
 type = internal/cpu
 interval = 2
 ;format-underline = #f90000
-label = %percentage:2%⚛
+label = CPU %percentage:2%%
 
 [module/memory]
 type = internal/memory
 interval = 2
 ;format-underline = #4bffdc
-label = %percentage_used%☰
+label = RAM %percentage_used%%
 
 [module/wlan]
 type = internal/network
@@ -178,22 +195,18 @@ label-connected = %essid%
 [module/date]
 type = internal/date
 interval = 5
-
-date =
+date = %m/%d
 date-alt = " %Y-%m-%d"
-
 time = %H:%M
 time-alt = %H:%M:%S
-
 format-underline = #0a6cf5
-
 label = %date% %time%
 
 [module/pulseaudio]
 type = internal/pulseaudio
 
 format-volume = <label-volume> <bar-volume>
-label-volume = VOL %percentage%%
+label-volume = ♫ %percentage%%
 label-volume-foreground = ${root.foreground}
 
 label-muted-foreground = #666
@@ -206,7 +219,7 @@ bar-volume-foreground-3 = #55aa55
 bar-volume-foreground-4 = #55aa55
 bar-volume-foreground-5 = #f5a70a
 bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
+bar-volume-gradient = true
 bar-volume-indicator = |
 bar-volume-indicator-font = 2
 bar-volume-fill = ─
@@ -215,32 +228,15 @@ bar-volume-empty = ─
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
-[module/alsa]
-type = internal/alsa
-
-format-volume = <label-volume> <bar-volume>
-label-volume = VOL
-label-volume-foreground = ${root.foreground}
-
-format-muted-foreground = ${colors.foreground-alt}
-label-muted = sound muted
-
-bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
-bar-volume-foreground-5 = #f5a70a
-bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
-bar-volume-indicator = |
-bar-volume-indicator-font = 2
-bar-volume-fill = ─
-bar-volume-fill-font = 2
-bar-volume-empty = ─
-bar-volume-empty-font = 2
-bar-volume-empty-foreground = ${colors.foreground-alt}
+[module/spotify]
+type = custom/script
+exec = ~/.config/polybar/spotify
+tail = true
+interval = 0
+format-underline = #00DE14
+click-left = exec playerctl play-pause
+scroll-up = exec playerctl next
+scroll-down = exec playerctl previous
 
 [module/battery]
 type = internal/battery
@@ -248,7 +244,7 @@ battery = BAT0
 adapter = AC
 full-at = 98
 
-format-charging = <label-charging>
+format-charging = 🔋<label-charging>
 format-charging-underline = #ffb52a
 
 format-discharging = <label-discharging>
@@ -265,22 +261,6 @@ animation-charging-framerate = 750
 
 animation-discharging-foreground = ${colors.foreground-alt}
 animation-discharging-framerate = 750
-
-[module/temperature]
-type = internal/temperature
-thermal-zone = 0
-warn-temperature = 60
-
-format = <ramp> <label>
-format-underline = #f50a4d
-format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
-
-label = %temperature-c%
-label-warn = %temperature-c%
-label-warn-foreground = ${colors.secondary}
-
-ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]
 type = custom/menu
